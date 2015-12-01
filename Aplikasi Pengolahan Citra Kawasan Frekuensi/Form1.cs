@@ -7,12 +7,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Emgu.CV;
+using Emgu.Util;
+using Emgu.CV.Structure;
 
 namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
 {
     public partial class Form1 : Form
     {
         Bitmap gambar_awal, gambar_hasil, gambar_tmp, gambar_cari_diameter, DFT_red, DFT_green, DFT_blue;
+        Image<Bgr, Byte> gambar_awal_e;
+
         bool tambah_filter, menggambar;
         Point koordinat_awal, koordinat_akhir;
         int jari_jari_lingkaran;
@@ -53,6 +58,8 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
             pilih_gambar.Filter = "File gambar (*.BMP; *.JPG; *.PNG)|*.BMP; *.JPG; *.PNG";
             if (pilih_gambar.ShowDialog() == DialogResult.OK)
             {
+                gambar_awal_e = new Image<Bgr, byte>(pilih_gambar.FileName);
+
                 gambar_awal = new Bitmap(new Bitmap(pilih_gambar.FileName)); //gambar asli
                 gambar_hasil = new Bitmap(new Bitmap(pilih_gambar.FileName)); 
                 gambar_tmp = new Bitmap(new Bitmap(pilih_gambar.FileName)); //buat proses pengolahan
@@ -62,7 +69,8 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
                 DFT_green = new Bitmap(new Bitmap(pilih_gambar.FileName));
                 DFT_blue = new Bitmap(new Bitmap(pilih_gambar.FileName));
 
-                pictureBox1.Image = gambar_awal;
+                pictureBox1.Image = gambar_awal_e.ToBitmap();
+                //pictureBox1.Image = gambar_awal;
 
                 button2.Enabled = true;
                 button3.Enabled = false;
