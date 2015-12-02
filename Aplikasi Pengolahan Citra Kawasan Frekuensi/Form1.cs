@@ -16,7 +16,7 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
     public partial class Form1 : Form
     {
         Bitmap gambar_awal, gambar_hasil, gambar_tmp, gambar_cari_diameter, DFT_red, DFT_green, DFT_blue;
-        Image<Bgr, Byte> gambar_awal_e;
+        Image<Bgr, Byte> gambar_awal_e, gambar_tmp_e, DFT_red_e;
 
         bool tambah_filter, menggambar;
         Point koordinat_awal, koordinat_akhir;
@@ -124,7 +124,7 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
 
             comboBox2.SelectedIndex = 0;
 
-            cari_DFT_gambar_awal();
+            cari_DFT_gambar_awal_e();
         }
 
         private void cari_DFT_gambar_awal()
@@ -172,6 +172,65 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
                 }
             }
             pictureBox2.Image = DFT_red;
+        }
+
+        private void cari_DFT_gambar_awal_e()
+        {
+            DFT_red_e = new Image<Bgr, byte>(gambar_tmp.Width, gambar_tmp.Height);
+
+            Byte[,,] GetPixel_e = gambar_awal_e.Data; //Mengambil warna dari gambar awal
+            Byte[,,] SetPixel_e = DFT_red_e.Data; //Mengeset warna ke gambar akhir
+
+            int N, M, phi;
+            double r, g, b;
+            double gs;
+            N = gambar_tmp.Height;
+            M = gambar_tmp.Width;
+            phi = 180;
+
+            for (int u = 0; u < gambar_tmp.Width; u++)
+            {
+                for (int v = 0; v < gambar_tmp.Height; v++)
+                {
+                    r = 0;
+                    g = 0;
+                    b = 0;
+                    gs = 0;
+                    for (int x = 0; x < gambar_tmp.Width; x++)
+                    {
+                        for (int y = 0; y < gambar_tmp.Height; y++)
+                        {
+                            gs = ((GetPixel_e[y, x, 0] + GetPixel_e[y, x, 1] + GetPixel_e[y, x, 2])/3) * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
+                            r += GetPixel_e[y, x, 2] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
+                            g += GetPixel_e[y, x, 1] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
+                            b += GetPixel_e[y, x, 0] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
+                        }
+                    }
+                    r /= M / N;
+                    g /= M / N;
+                    b /= M / N;
+
+                    if (r > 255)
+                        r = 255;
+                    else if (r < 0)
+                        r = 0;
+
+                    if (g > 255)
+                        g = 255;
+                    else if (g < 0)
+                        g = 0;
+
+                    if (b > 255)
+                        b = 255;
+                    else if (b < 0)
+                        b = 0;
+
+                    SetPixel_e[v, u, 0] = (byte)gs;
+                    SetPixel_e[v, u, 1] = (byte)gs;
+                    SetPixel_e[v, u, 2] = (byte)gs;
+                }
+            }
+            pictureBox2.Image = DFT_red_e.ToBitmap();
         }
 
         private void button3_Click(object sender, EventArgs e)
