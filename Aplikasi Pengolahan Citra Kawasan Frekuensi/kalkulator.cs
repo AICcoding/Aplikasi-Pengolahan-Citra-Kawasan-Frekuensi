@@ -22,7 +22,7 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
             tabControl1.SelectedIndex = 1;
             int N, M;
             double gs, fx, ux_bagi_m, vy_bagi_n;
-            N = 5;
+            N = (int)numericUpDown1.Value;
             M = dataGridView1.Rows.Count - 1;
 
             for (int u = 0; u < M; u++)
@@ -53,6 +53,21 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
             hasil = Math.Cos(tmp);
             hasil = Math.Round(hasil, 4);
             return hasil;
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            int n=(int)numericUpDown1.Value;
+            int m = (int)numericUpDown2.Value;
+            for(int i=0;i<n;i++)
+            {
+                dataGridView1.Columns.Add("newColumnName", "aic");
+                dataGridView2.Columns.Add("newColumnName", "aic");
+            }
+            for (int i = 0; i < m; i++)
+            {
+                dataGridView1.Rows.Add("");
+            }
         }
     }
 }
