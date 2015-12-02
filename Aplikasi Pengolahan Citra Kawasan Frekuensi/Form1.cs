@@ -200,7 +200,8 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
                     {
                         for (int y = 0; y < gambar_tmp.Width; y++)
                         {
-                            gs += (((float)GetPixel_e[x, y, 0] + (float)GetPixel_e[x, y, 1] + (float)GetPixel_e[x, y, 2]) / 3F) * Math.Cos(2 * phi * (((float)u * (float)x / (float)N) + ((float)v * (float)y / (float)M)));
+                            //gs += (((float)GetPixel_e[x, y, 0] + (float)GetPixel_e[x, y, 1] + (float)GetPixel_e[x, y, 2]) / 3F) * Math.Cos(2 * phi * (((float)u * (float)x / (float)N) + ((float)v * (float)y / (float)M)));
+                            gs += (((float)GetPixel_e[x, y, 0] + (float)GetPixel_e[x, y, 1] + (float)GetPixel_e[x, y, 2]) / 3F) * cos(2 * phi * (((float)u * (float)x / (float)N) + ((float)v * (float)y / (float)M)));
 
                             /*r += GetPixel_e[y, x, 2] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
                             g += GetPixel_e[y, x, 1] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
@@ -494,6 +495,19 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
         private void pictureBox1_MouseUp(object sender, MouseEventArgs e)
         {
             menggambar = false;
+        }
+
+        private void button5_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(cos(100).ToString());
+        }
+
+        private double cos(double sudut)
+        {
+            double hasil, tmp;
+            tmp = sudut * Math.PI / 180F;
+            hasil = Math.Cos(tmp);
+            return hasil;
         }
     }
 }
