@@ -94,7 +94,7 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
             Byte[, ,] SetPixelGS_e = DFT_grayscale_e.Data; //Mengeset warna ke gambar akhir
 
             int N, M, phi;
-            double r, g, b, gs_r, gs_i;
+            double r, g, b, gs;
             double mag;
 
             N = gambar_tmp.Width;
@@ -108,21 +108,17 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
                     r = 0;
                     g = 0;
                     b = 0;
-                    gs_r = 0;
-                    gs_i = 0;
+                    gs = 0;
                     for (int x = 0; x < M; x++)
                     {
                         for (int y = 0; y < N; y++)
                         {
-                            gs_r += (((float)GetPixel_e[x, y, 0] + (float)GetPixel_e[x, y, 1] + (float)GetPixel_e[x, y, 2]) / 3F) * Math.Cos(-2 * Math.PI * (((float)u * (float)x / (float)M) + ((float)v * (float)y / (float)N)));
-                            gs_i += (((float)GetPixel_e[x, y, 0] + (float)GetPixel_e[x, y, 1] + (float)GetPixel_e[x, y, 2]) / 3F) * Math.Sin(-2 * Math.PI * (((float)u * (float)x / (float)M) + ((float)v * (float)y / (float)N)));
+                            gs += (((float)GetPixel_e[x, y, 0] + (float)GetPixel_e[x, y, 1] + (float)GetPixel_e[x, y, 2]) / 3F) * Math.Cos(2 * Math.PI * (((float)u * (float)x / (float)M) + ((float)v * (float)y / (float)N)));
                             r += ((float)GetPixel_e[x, y, 2]) * cos(2 * phi * (((float)u * (float)x / (float)M) + ((float)v * (float)y / (float)N)));
                             g += ((float)GetPixel_e[x, y, 1]) * cos(2 * phi * (((float)u * (float)x / (float)M) + ((float)v * (float)y / (float)N)));
                             b += ((float)GetPixel_e[x, y, 0]) * cos(2 * phi * (((float)u * (float)x / (float)M) + ((float)v * (float)y / (float)N)));
                         }
                     }
-
-                    mag = Math.Sqrt((double)gs_r * (double)gs_r + (double)gs_i * (double)gs_i);            
 
                     if (r > 255)
                         r = 255;
@@ -139,10 +135,10 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
                     else if (b < 0)
                         b = 0;
 
-                    if (mag < 0)
-                        mag = 0;
-                    else if (mag > 255)
-                        mag = 255;
+                    if (gs < 0)
+                        gs = 0;
+                    else if (gs > 255)
+                        gs = 255;
 
                     SetPixelR_e[u, v, 0] = 0;
                     SetPixelR_e[u, v, 1] = 0;
@@ -156,9 +152,9 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
                     SetPixelB_e[u, v, 1] = 0;
                     SetPixelB_e[u, v, 2] = 0;
 
-                    SetPixelGS_e[u, v, 0] = (byte)mag;
-                    SetPixelGS_e[u, v, 1] = (byte)mag;
-                    SetPixelGS_e[u, v, 2] = (byte)mag;             
+                    SetPixelGS_e[u, v, 0] = (byte)gs;
+                    SetPixelGS_e[u, v, 1] = (byte)gs;
+                    SetPixelGS_e[u, v, 2] = (byte)gs;             
                 }
             }
             pictureBox2.Image = DFT_grayscale_e.ToBitmap();
