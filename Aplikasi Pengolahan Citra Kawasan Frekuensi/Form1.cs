@@ -184,29 +184,30 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
             int N, M, phi;
             double r, g, b;
             double gs;
-            N = gambar_tmp.Height;
-            M = gambar_tmp.Width;
+            N = gambar_tmp.Width;
+            M = gambar_tmp.Height;
             phi = 180;
 
-            for (int u = 0; u < gambar_tmp.Width; u++)
+            for (int u = 0; u < gambar_tmp.Height; u++)
             {
-                for (int v = 0; v < gambar_tmp.Height; v++)
+                for (int v = 0; v < gambar_tmp.Width; v++)
                 {
                     r = 0;
                     g = 0;
                     b = 0;
                     gs = 0;
-                    for (int x = 0; x < gambar_tmp.Width; x++)
+                    for (int x = 0; x < gambar_tmp.Height; x++)
                     {
-                        for (int y = 0; y < gambar_tmp.Height; y++)
+                        for (int y = 0; y < gambar_tmp.Width; y++)
                         {
-                            gs = ((GetPixel_e[y, x, 0] + GetPixel_e[y, x, 1] + GetPixel_e[y, x, 2])/3) * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
-                            r += GetPixel_e[y, x, 2] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
+                            gs += (((float)GetPixel_e[x, y, 0] + (float)GetPixel_e[x, y, 1] + (float)GetPixel_e[x, y, 2]) / 3F) * Math.Cos(2 * phi * (((float)u * (float)x / (float)N) + ((float)v * (float)y / (float)M)));
+
+                            /*r += GetPixel_e[y, x, 2] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
                             g += GetPixel_e[y, x, 1] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
-                            b += GetPixel_e[y, x, 0] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));
+                            b += GetPixel_e[y, x, 0] * Math.Cos(2 * phi * ((u * x / N) + (v * y / M)));*/
                         }
                     }
-                    r /= M / N;
+                    /*r /= M / N;
                     g /= M / N;
                     b /= M / N;
 
@@ -223,11 +224,17 @@ namespace Aplikasi_Pengolahan_Citra_Kawasan_Frekuensi
                     if (b > 255)
                         b = 255;
                     else if (b < 0)
-                        b = 0;
+                        b = 0;*/
+                    //MessageBox.Show(gs.ToString());
+                    if (gs < 0)
+                        gs = 0;
+                    else if (gs > 255)
+                        gs = 255;
 
-                    SetPixel_e[v, u, 0] = (byte)gs;
-                    SetPixel_e[v, u, 1] = (byte)gs;
-                    SetPixel_e[v, u, 2] = (byte)gs;
+
+                    SetPixel_e[u, v, 0] = (byte)gs;
+                    SetPixel_e[u, v, 1] = (byte)gs;
+                    SetPixel_e[u, v, 2] = (byte)gs;               
                 }
             }
             pictureBox2.Image = DFT_red_e.ToBitmap();
